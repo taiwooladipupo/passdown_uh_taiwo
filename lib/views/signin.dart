@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:passdown/authentication_service.dart';
 import 'package:passdown/theme/routes.dart';
+import 'package:passdown/views/home.dart';
 import 'package:passdown/views/signup.dart';
 import 'package:provider/provider.dart';
 import 'package:passdown/theme/routes.dart';
@@ -21,7 +22,7 @@ class _SignInPageState extends State<SignInPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.teal,
+        backgroundColor: Colors.deepPurple.shade900,
         title: Text('Sign In Screen'),
       ),
       body: Column(
