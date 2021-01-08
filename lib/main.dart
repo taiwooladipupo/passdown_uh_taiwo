@@ -1,12 +1,15 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:passdown/authentication_service.dart';
 import 'package:passdown/theme/routes.dart';
+import 'package:passdown/common_widget/app_bar_widget.dart';
+import 'package:passdown/common_widget/drawer_widget.dart';
+import 'package:passdown/common_widget/bottom_navbar_widget.dart';
 import 'package:passdown/views/home.dart';
 import 'package:passdown/views/signin.dart';
 import 'package:passdown/views/signup.dart';
-import 'package:provider/provider.dart';
-import 'package:flutter/material.dart';
 
 
 //Main Class
@@ -28,7 +31,9 @@ class MyApp extends StatelessWidget {
         ),
         StreamProvider(
           create: (context) =>
-          context.read<AuthenticationService>().authStateChanges,
+          context
+              .read<AuthenticationService>()
+              .authStateChanges,
         ),
       ],
       child: MaterialApp(
@@ -46,19 +51,35 @@ class MyApp extends StatelessWidget {
 
 
 //Class AuthenticationWrapper
-class AuthenticationWrapper extends StatelessWidget {
+class AuthenticationWrapper extends StatefulWidget {
   AuthenticationWrapper({
     Key key,
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    final firebaseuser = context.watch<User>();
+  _AuthenticationWrapperState createState() => _AuthenticationWrapperState();
+}
 
-    if (firebaseuser != null) {
-      //return home screen or print
-      return SignInPage();
-    }
-    return HomePage();
+class _AuthenticationWrapperState extends State<AuthenticationWrapper> {
+  @override
+  Widget build(BuildContext context) {
+    return DefaultTabController(
+        length: 3,
+        child: Scaffold(
+            appBar: appBarWidget(context),
+            drawer: DrawerWidget(),
+            body: IndexedStack(
+              //index: currentIndex,
+              //children: viewContainer,
+            // final firebaseuser = context.watch<User>();
+            //
+            // if (firebaseuser != null) {
+            // return SignInPage();
+            // }
+            // return HomePage();
+    ),
+    bottomNavigationBar: BottomNavBarWidget(),
+    ),
+    );
   }
 }
