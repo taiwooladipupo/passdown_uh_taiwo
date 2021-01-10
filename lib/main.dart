@@ -4,6 +4,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:passdown/views/home.dart';
 import 'package:passdown/views/signin.dart';
 import 'package:passdown/views/signup.dart';
+import 'package:passdown/views/upload_products.dart';
 import 'package:passdown/views/welcome_screen.dart';
 import 'package:passdown/views/wish_list.dart';
 
@@ -39,6 +40,7 @@ class MyApp extends StatelessWidget {
           SignUpPage.id: (context) => SignUpPage(),
           HomePage.id: (context) => HomePage(),
           WishListPage.id: (context) => WishListPage(),
+          UploadProductPage.id: (context) => UploadProductPage(),
         },
     );
   }

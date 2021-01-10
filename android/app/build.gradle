@@ -40,7 +40,7 @@ android {
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId "com.passdown.passdownapp"
-        minSdkVersion 16
+        minSdkVersion 21
         targetSdkVersion 29
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
@@ -73,6 +73,4 @@ dependencies {
     implementation 'com.google.firebase:firebase-database'
     def multidex_version = "2.0.1"
     implementation "androidx.multidex:multidex:$multidex_version"
-
-
 }

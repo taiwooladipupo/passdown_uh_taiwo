@@ -1,11 +1,12 @@
 // import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:passdown/common_widget/bottom_navbar_widget.dart';
 import 'package:passdown/common_widget/search_widget.dart';
+import 'package:passdown/views/upload_products.dart';
 
-//final _firestore = Firestore.instance;
-FirebaseUser loggedInUser;
+User loggedInUser;
 
 class WishListPage extends StatefulWidget {
   static const String id = 'wish list';
@@ -60,6 +61,12 @@ class _WishListPageState extends State<WishListPage> {
             Text("Wish List Data coming soon")
           ],
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.pushNamed(context, UploadProductPage.id);
+        },
+        child: Icon(Icons.add),
       ),
       bottomNavigationBar: BottomNavBarWidget(),
     );

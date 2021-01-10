@@ -3,8 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:passdown/common_widget/bottom_navbar_widget.dart';
 import 'package:passdown/common_widget/search_widget.dart';
+import 'package:passdown/views/product.dart';
+import 'package:passdown/views/upload_products.dart';
 
-FirebaseUser loggedInUser;
+final _firestore = FirebaseFirestore.instance;
+User loggedInUser;
 
 class HomePage extends StatefulWidget {
   static const String id = 'home';
@@ -14,6 +17,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
 
+  final productController = TextEditingController() ;
   String productname = 'product_name';
   String description = 'description';
   String imageurl;
@@ -21,18 +25,17 @@ class _HomePageState extends State<HomePage> {
 
   _HomePageState();
 
-
   final _auth = FirebaseAuth.instance;
 
   @override
   void initState() {
     super.initState();
-
     getCurrentUser();
   }
 
   void getCurrentUser() async {
     try {
+      //final user =  _auth.currentUser;
       final user = await _auth.currentUser;
       if (user != null) {
         loggedInUser = user;
@@ -125,11 +128,11 @@ class _HomePageState extends State<HomePage> {
                 ),
                 PopupMenuItem(
                   value: "sort_fooditems_desc",
-                  child: Text("Sort by Likes descending"),
+                  child: Text("Sort by Food Items descending"),
                 ),
                 PopupMenuItem(
                   value: "sort_fooditems_asc",
-                  child: Text("Sort by Clothing ascending"),
+                  child: Text("Sort by Food Items ascending"),
                 ),
                 PopupMenuItem(
                   value: "sort_schoolitems_desc",
@@ -152,32 +155,34 @@ class _HomePageState extends State<HomePage> {
         backgroundColor: Colors.teal,
         title: Text('PASSDOWN'),
       ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          StreamBuilder<QuerySnapshot>(
-                  stream: query.snapshots(),
-                  builder: (context, stream) {
-                    if (stream.connectionState == ConnectionState.waiting) {
-                      return Center(child: CircularProgressIndicator());
-                    }
+      body: StreamBuilder<QuerySnapshot>(
+                    stream: query.snapshots(),
+                    builder: (context, stream) {
+                      if (stream.connectionState == ConnectionState.waiting) {
+                        return Center(child: CircularProgressIndicator());
+                      }
 
-                    if (stream.hasError) {
-                      return Center(child: Text(stream.error.toString()));
-                    }
+                      if (stream.hasError) {
+                        return Center(child: Text(stream.error.toString()));
+                      }
+                      //print(stream.error);
+                      QuerySnapshot querySnapshot = stream.data;
 
-                    QuerySnapshot querySnapshot = stream.data;
-
-                    return ListView.builder(
-                      itemCount: querySnapshot.size,
-                      itemBuilder: (context, index) => Product(querySnapshot.docs[index]),
-                    );
-                  },
-                ),
-        ],
-      ),
+                      //print(querySnapshot);
+                      return ListView.builder(
+                        itemCount: querySnapshot.size,
+                        itemBuilder: (context, index) => Product(querySnapshot.docs[index]),
+                      );
+                    },
+        ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            Navigator.pushNamed(context, UploadProductPage.id);
+          },
+          child: Icon(Icons.add),
+        ),
     bottomNavigationBar: BottomNavBarWidget(),
   );
   }
 }
+

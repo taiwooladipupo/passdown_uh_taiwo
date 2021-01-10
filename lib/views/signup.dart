@@ -1,6 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:passdown/common_widget/bottom_navbar_widget.dart';
 import 'package:passdown/views/home.dart';
 import 'package:passdown/views/signin.dart';
 
