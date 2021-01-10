@@ -3,8 +3,8 @@ import 'package:passdown/views/home.dart';
 import 'package:passdown/views/signin.dart';
 import 'package:passdown/views/signup.dart';
 import 'package:passdown/views/welcome_screen.dart';
-//firebase_core: ^0.3.4
 //  http: ^0.12.0+4
+//cloud_firestore: ^0.9.13+1
 
 //Main Class
 void main() => runApp(MyApp());

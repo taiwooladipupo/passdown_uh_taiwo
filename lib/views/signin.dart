@@ -22,13 +22,14 @@ class _SignInPageState extends State<SignInPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         backgroundColor: Colors.teal,
         title: Text('Sign In Screen'),
       ),
       body: Column(
         children: [
           TextField(
-            textAlign: TextAlign.center,
+            textAlign: TextAlign.left,
             onChanged: (value) {
               emailController = value;
             },
@@ -46,6 +47,8 @@ class _SignInPageState extends State<SignInPage> {
             ),
           ),
           RaisedButton(
+            elevation: 5.0,
+            color: Colors.teal.shade300,
             onPressed: () async {
               setState(() {
                 showSpinner = true;
@@ -68,6 +71,8 @@ class _SignInPageState extends State<SignInPage> {
           Column(
             children: [
               RaisedButton(
+                elevation: 5.0,
+                color: Colors.teal.shade300,
                 onPressed: () {
                   Navigator.pushNamed(context, SignUpPage.id);
                 },
@@ -77,7 +82,7 @@ class _SignInPageState extends State<SignInPage> {
           ),
         ],
       ),
-      bottomNavigationBar: BottomNavBarWidget(),
+      //bottomNavigationBar: BottomNavBarWidget(),
     );
   }
 }

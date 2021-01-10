@@ -1,9 +1,9 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+// import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:passdown/common_widget/bottom_navbar_widget.dart';
 
-final _firestore = Firestore.instance;
+//final _firestore = Firestore.instance;
 FirebaseUser loggedInUser;
 
 class HomePage extends StatefulWidget {
@@ -13,10 +13,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  // final List<Map> myProducts =
-  //     List.generate(6, (index) => {"id": index, "name": "Product $index"})
-  //         .toList();
-      final _auth = FirebaseAuth.instance;
+  final _auth = FirebaseAuth.instance;
 
   @override
   void initState() {
@@ -40,6 +37,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         leading: null,
         actions: <Widget>[
           IconButton(
@@ -54,23 +52,7 @@ class _HomePageState extends State<HomePage> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(15.0),
-        // child: GridView.builder(
-        //     gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-        //         maxCrossAxisExtent: 200,
-        //         childAspectRatio: 3 / 2,
-        //         crossAxisSpacing: 20,
-        //         mainAxisSpacing: 20),
-        //     itemCount: myProducts.length,
-        //     itemBuilder: (BuildContext context, index) {
-        //       return Container(
-        //         alignment: Alignment.center,
-        //         child: Text(myProducts[index]["name"]),
-        //         decoration: BoxDecoration(
-        //           color: Colors.amber,
-        //           borderRadius: BorderRadius.circular(15),
-        //         ),
-        //       );
-        //     }),
+        child: Text("Welcome Home"),
       ),
       bottomNavigationBar: BottomNavBarWidget(),
     );

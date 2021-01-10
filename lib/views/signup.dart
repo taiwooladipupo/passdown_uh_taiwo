@@ -30,10 +30,11 @@ class _SignUpPageState extends State<SignUpPage> {
       body: Column(
         children: [
           TextField(
-            textAlign: TextAlign.center,
+            textAlign: TextAlign.left,
             onChanged: (value) {
               emailController = value;
             },
+            keyboardType: TextInputType.emailAddress,
             decoration: InputDecoration(
               labelText: "Email",
             ),
@@ -42,6 +43,7 @@ class _SignUpPageState extends State<SignUpPage> {
             onChanged: (value) {
               phoneController = value;
             },
+            keyboardType: TextInputType.phone,
             decoration: InputDecoration(
               labelText: "Phone",
             ),
@@ -65,6 +67,8 @@ class _SignUpPageState extends State<SignUpPage> {
             ),
           ),
           RaisedButton(
+            elevation: 5.0,
+            color: Colors.teal.shade300,
             onPressed: () async {
               setState(() {
                 showSpinner = true;
@@ -87,6 +91,8 @@ class _SignUpPageState extends State<SignUpPage> {
           Column(
             children: [
                   RaisedButton(
+                    elevation: 5.0,
+                    color: Colors.teal.shade300,
                     onPressed: () {
                       Navigator.pushNamed(context, SignInPage.id);
                     },
@@ -96,7 +102,7 @@ class _SignUpPageState extends State<SignUpPage> {
           ),
         ],
       ),
-      bottomNavigationBar: BottomNavBarWidget(),
+      //bottomNavigationBar: BottomNavBarWidget(),
     );
   }
 }

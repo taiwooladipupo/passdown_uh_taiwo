@@ -15,7 +15,8 @@ class _BottomNavBarWidgetState extends State<BottomNavBarWidget> {
       setState(() {
         _selectedIndex = index;
         //navigateToScreens(index);
-        HomePage();
+        //HomePage();
+        Navigator.pushNamed(context, HomePage.id);
       });
 
     }
@@ -27,7 +28,8 @@ class _BottomNavBarWidgetState extends State<BottomNavBarWidget> {
           icon: Icon(Icons.home),
           title: Text(
             'Home',
-            style: TextStyle(color: Color(0xFF545454)),
+            style: TextStyle(color: Color(0xFF545454),
+            ),
           ),
         ),
         BottomNavigationBarItem(

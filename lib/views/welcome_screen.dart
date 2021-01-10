@@ -21,7 +21,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
 
     controller =
         AnimationController(duration: Duration(seconds: 1), vsync: this);
-    animation = ColorTween(begin: Colors.blueGrey, end: Colors.white)
+    animation = ColorTween(begin: Colors.teal, end: Colors.white)
         .animate(controller);
     controller.forward();
     controller.addListener(() {
@@ -38,6 +38,9 @@ class _WelcomeScreenState extends State<WelcomeScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.teal,
+      ),
       backgroundColor: animation.value,
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: 24.0),
@@ -46,19 +49,26 @@ class _WelcomeScreenState extends State<WelcomeScreen>
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
             Row(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Hero(
                   tag: 'logo',
                   child: Container(
                     child: Image.asset('assets/images/ic_app_icon.png'),
-                    height: 60.0,
+                    height: 160.0,
+                    width: 250,
                   ),
                 ),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
                 TypewriterAnimatedTextKit(
-                  text: ['PASSDOWN'],
+                  text: ['WELCOME'],
                   textStyle: TextStyle(
-                    fontSize: 45.0,
-                    fontWeight: FontWeight.w900,
+                    fontSize: 30.0,
+                    fontWeight: FontWeight.w500,
                   ),
                 ),
               ],
@@ -67,15 +77,15 @@ class _WelcomeScreenState extends State<WelcomeScreen>
               height: 48.0,
             ),
             RaisedButton(
-              child: Text('Log In'),
-              color: Colors.lightBlueAccent,
+              child: Text('Sign In'),
+              color: Colors.teal,
               onPressed: () {
                 Navigator.pushNamed(context, SignInPage.id);
               },
             ),
             RaisedButton(
               child: Text('Register'),
-              color: Colors.blueAccent,
+              color: Colors.teal.shade300,
               onPressed: () {
                 Navigator.pushNamed(context, SignUpPage.id);
               },
