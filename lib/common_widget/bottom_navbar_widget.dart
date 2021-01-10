@@ -1,6 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:passdown/views/home.dart';
+import 'package:passdown/views/wish_list.dart';
 
 class BottomNavBarWidget extends StatefulWidget {
   @override
@@ -8,17 +10,20 @@ class BottomNavBarWidget extends StatefulWidget {
 }
 
 class _BottomNavBarWidgetState extends State<BottomNavBarWidget> {
+
+  final _auth = FirebaseAuth.instance;
   @override
   Widget build(BuildContext context) {
     int _selectedIndex = 0;
     void _onItemTapped(int index) {
       setState(() {
         _selectedIndex = index;
-        //navigateToScreens(index);
-        //HomePage();
+        // navigateToScreens(index);
         Navigator.pushNamed(context, HomePage.id);
+        Navigator.pushNamed(context, WishListPage.id);
+        //Navigator.pushNamed(context, Cart.id);
+        // //Navigator.pushNamed(context, Profile.id);
       });
-
     }
 
     return BottomNavigationBar(
@@ -27,15 +32,14 @@ class _BottomNavBarWidgetState extends State<BottomNavBarWidget> {
         BottomNavigationBarItem(
           icon: Icon(Icons.home),
           title: Text(
-            'Home',
-            style: TextStyle(color: Color(0xFF545454),
-            ),
+          'Home',
+          style: TextStyle(color: Color(0xFF545454)),
           ),
         ),
         BottomNavigationBarItem(
           icon: Icon(FontAwesomeIcons.heart),
           title: Text(
-            'Favourite',
+            'Wish List',
             style: TextStyle(color: Color(0xFF545454)),
           ),
         ),
@@ -49,7 +53,7 @@ class _BottomNavBarWidgetState extends State<BottomNavBarWidget> {
         BottomNavigationBarItem(
           icon: Icon(FontAwesomeIcons.dashcube),
           title: Text(
-            'Personal',
+            'Profile',
             style: TextStyle(color: Color(0xFF545454)),
           ),
         ),
@@ -60,3 +64,5 @@ class _BottomNavBarWidgetState extends State<BottomNavBarWidget> {
     );
   }
 }
+
+
