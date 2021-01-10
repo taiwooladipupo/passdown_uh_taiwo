@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:passdown/main.dart';
 import 'package:passdown/views/home.dart';
-//import 'package:passdown/views/wishlist_screen.dart';
 import 'package:passdown/views/signin.dart';
 
 class DrawerWidget extends StatefulWidget {

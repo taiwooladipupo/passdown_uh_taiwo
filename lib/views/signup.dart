@@ -1,68 +1,94 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:passdown/authentication_service.dart';
-import 'package:passdown/theme/routes.dart';
-import 'package:provider/provider.dart';
+import 'package:passdown/common_widget/bottom_navbar_widget.dart';
+import 'package:passdown/views/home.dart';
+import 'package:passdown/views/signin.dart';
 
 class SignUpPage extends StatefulWidget {
+  static const String id = 'signup';
   @override
   _SignUpPageState createState() => _SignUpPageState();
 }
 
 class _SignUpPageState extends State<SignUpPage> {
 
-  final TextEditingController emailController  = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
-  final TextEditingController rePasswordController = TextEditingController();
-  final TextEditingController phoneController = TextEditingController();
+  String emailController;
+  String passwordController;
+  String rePasswordController;
+  String phoneController;
+
+  final _auth = FirebaseAuth.instance;
+  bool showSpinner = false;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.deepPurple.shade900,
+        backgroundColor: Colors.teal,
         title: Text('Sign Up Screen'),
       ),
       body: Column(
         children: [
           TextField(
-            controller: emailController,
+            textAlign: TextAlign.center,
+            onChanged: (value) {
+              emailController = value;
+            },
             decoration: InputDecoration(
               labelText: "Email",
             ),
           ),
           TextField(
-            controller: phoneController,
+            onChanged: (value) {
+              phoneController = value;
+            },
             decoration: InputDecoration(
               labelText: "Phone",
             ),
           ),
           TextField(
-            controller: passwordController,
+            onChanged: (value) {
+              passwordController = value;
+            },
+              obscureText: true,
             decoration: InputDecoration(
               labelText: "Password",
             ),
           ),
           TextField(
-            controller: rePasswordController,
+            onChanged: (value) {
+              rePasswordController = value;
+            },
+            obscureText: true,
             decoration: InputDecoration(
               labelText: "Confirm Password",
             ),
           ),
           RaisedButton(
-            onPressed: () {
-              context.read<AuthenticationService>().SignUp(
-                  email: emailController.text.trim(),
-                  password: passwordController.text.trim()
-              );
+            onPressed: () async {
+              setState(() {
+                showSpinner = true;
+              });
+              try {
+                final newUser = await _auth.createUserWithEmailAndPassword(
+                    email: emailController, password: emailController);
+                if (newUser != null) {
+                  Navigator.pushNamed(context, HomePage.id);
+                }
+                setState(() {
+                  showSpinner = false;
+                });
+              } catch (e) {
+                print(e);
+              }
             },
             child: Text('Sign Up'),
-            //TODO: Activate OTP
           ),
           Column(
             children: [
                   RaisedButton(
                     onPressed: () {
-                      Navigator.of(context).pushNamed(AppRoutes.authLogin);
+                      Navigator.pushNamed(context, SignInPage.id);
                     },
                     child: Text('Already Registred? Sign In'),
                   ),
@@ -70,6 +96,7 @@ class _SignUpPageState extends State<SignUpPage> {
           ),
         ],
       ),
+      bottomNavigationBar: BottomNavBarWidget(),
     );
   }
 }

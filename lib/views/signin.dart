@@ -1,51 +1,67 @@
 import 'package:flutter/material.dart';
-import 'package:passdown/authentication_service.dart';
-import 'package:passdown/theme/routes.dart';
+import 'package:passdown/common_widget/bottom_navbar_widget.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:passdown/views/home.dart';
 import 'package:passdown/views/signup.dart';
-import 'package:provider/provider.dart';
-import 'package:passdown/theme/routes.dart';
-
 
 class SignInPage extends StatefulWidget {
+  static const String id = 'signin';
 
   @override
   _SignInPageState createState() => _SignInPageState();
 }
 
 class _SignInPageState extends State<SignInPage> {
-  final TextEditingController emailController  = TextEditingController();
 
-  final TextEditingController passwordController = TextEditingController();
+  bool showSpinner = false;
+  final _auth =FirebaseAuth.instance;
+  String emailController;
+  String passwordController;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.deepPurple.shade900,
+        backgroundColor: Colors.teal,
         title: Text('Sign In Screen'),
       ),
       body: Column(
         children: [
           TextField(
-            controller: emailController,
+            textAlign: TextAlign.center,
+            onChanged: (value) {
+              emailController = value;
+            },
             decoration: InputDecoration(
               labelText: "Email",
             ),
           ),
           TextField(
-            controller: passwordController,
+            onChanged: (value) {
+              passwordController = value;
+            },
+            obscureText: true,
             decoration: InputDecoration(
               labelText: "Password",
             ),
           ),
           RaisedButton(
-            onPressed: () {
-              context.read<AuthenticationService>().SignIn(
-                  email: emailController.text.trim(),
-                  password: passwordController.text.trim()
-              );
-              Navigator.of(context).pushNamed(AppRoutes.authHome);
+            onPressed: () async {
+              setState(() {
+                showSpinner = true;
+              });
+              try {
+                final user = await _auth.signInWithEmailAndPassword(
+                    email: emailController, password: passwordController);
+                if (user != null) {
+                  Navigator.pushNamed(context, HomePage.id);
+                }
+                setState(() {
+                  showSpinner = false;
+                });
+              } catch (e) {
+                print(e);
+              }
             },
             child: Text('Sign In'),
           ),
@@ -53,7 +69,7 @@ class _SignInPageState extends State<SignInPage> {
             children: [
               RaisedButton(
                 onPressed: () {
-                  Navigator.of(context).pushNamed(AppRoutes.authRegister);
+                  Navigator.pushNamed(context, SignUpPage.id);
                 },
                 child: Text('Don\'t have an account? Register'),
               ),
@@ -61,6 +77,7 @@ class _SignInPageState extends State<SignInPage> {
           ),
         ],
       ),
+      bottomNavigationBar: BottomNavBarWidget(),
     );
   }
 }
