@@ -27,21 +27,26 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-        title: 'Passdown App',
-        theme: ThemeData(
-          primarySwatch: Colors.teal,
-          visualDensity: VisualDensity.adaptivePlatformDensity,
-        ),
-        initialRoute: WelcomeScreen.id,
-        routes: {
-          WelcomeScreen.id: (context) => WelcomeScreen(),
-          SignInPage.id: (context) => SignInPage(),
-          SignUpPage.id: (context) => SignUpPage(),
-          HomePage.id: (context) => HomePage(),
-          WishListPage.id: (context) => WishListPage(),
-          UploadProductPage.id: (context) => UploadProductPage(),
-        },
+    return StreamBuilder<Object>(
+      stream: null,
+      builder: (context, snapshot) {
+        return MaterialApp(
+            title: 'Passdown App',
+            theme: ThemeData(
+              primarySwatch: Colors.teal,
+              visualDensity: VisualDensity.adaptivePlatformDensity,
+            ),
+            initialRoute: WelcomeScreen.id,
+            routes: {
+              WelcomeScreen.id: (context) => WelcomeScreen(),
+              SignInPage.id: (context) => SignInPage(),
+              SignUpPage.id: (context) => SignUpPage(),
+              HomePage.id: (context) => HomePage(),
+              WishListPage.id: (context) => WishListPage(),
+              UploadProductPage.id: (context) => UploadProductPage(),
+            },
+        );
+      }
     );
   }
 }

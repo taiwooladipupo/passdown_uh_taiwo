@@ -2,8 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:passdown/common_widget/bottom_navbar_widget.dart';
-import 'package:passdown/common_widget/search_widget.dart';
-import 'package:passdown/views/product.dart';
 import 'package:passdown/views/upload_products.dart';
 
 final _firestore = FirebaseFirestore.instance;
@@ -17,15 +15,9 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
 
-  final productController = TextEditingController() ;
-  String productname = 'product_name';
-  String description = 'description';
-  String imageurl;
-  String _categorySort = 'sort category';
+  final _auth = FirebaseAuth.instance;
 
   _HomePageState();
-
-  final _auth = FirebaseAuth.instance;
 
   @override
   void initState() {
@@ -47,104 +39,9 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-  Query query =
-  FirebaseFirestore.instance.collection('passdownapp');
-
-  void _onActionSelected(String value) async {
-    if (value == "products") {
-      WriteBatch batch = FirebaseFirestore.instance.batch();
-
-      await query.get().then((querySnapshot) async {
-        querySnapshot.docs.forEach((document) {
-          batch.update(document.reference, {'products': 0});
-        });
-
-        await batch.commit();
-
-        setState(() {
-          _categorySort = "sort_category";
-        });
-      });
-    } else {
-      setState(() {
-        _categorySort = value;
-      });
-    }
-  }
-
-  switch (_categorySort) {
-    case "sort_category":
-      query = query.orderBy('category', descending: true);
-      break;
-
-    case "sort_clothing_desc":
-      query = query.orderBy('clothing', descending: true);
-      break;
-
-    case "sort_clothing_asc":
-      query = query.orderBy('clothing', descending: false);
-      break;
-
-    case "sort_fooditems_desc":
-      query = query.orderBy('fooditems', descending: true);
-      break;
-
-    case "sort_fooditems_asc":
-      query = query.orderBy('fooditems', descending: false);
-      break;
-
-    case "sort_schoolitems_desc":
-      query = query.orderBy('schoolitems', descending: true);
-      break;
-
-    case "sort_schoolitems_asc":
-      query = query.orderBy('schoolitems', descending: false);
-      break;
-  }
-
-
-  return Scaffold(
+    return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: false,
-        leading: null,
-        actions: <Widget>[
-          PopupMenuButton(
-            onSelected: (String value) async {
-              await _onActionSelected(value);
-            },
-            itemBuilder: (BuildContext context) {
-              return [
-                PopupMenuItem(
-                  value: "sort_category",
-                  child: Text("Sort by Category"),
-                ),
-                PopupMenuItem(
-                  value: "sort_clothing_desc",
-                  child: Text("Sort by Clothing descending"),
-                ),
-                PopupMenuItem(
-                  value: "sort_clothing_asc",
-                  child: Text("Sort by Clothing ascending"),
-                ),
-                PopupMenuItem(
-                  value: "sort_fooditems_desc",
-                  child: Text("Sort by Food Items descending"),
-                ),
-                PopupMenuItem(
-                  value: "sort_fooditems_asc",
-                  child: Text("Sort by Food Items ascending"),
-                ),
-                PopupMenuItem(
-                  value: "sort_schoolitems_desc",
-                  child: Text("Sort by School Items descending"),
-                ),
-                PopupMenuItem(
-                  value: "sort_schoolitems_asc",
-                  child: Text("Sort by School Items ascending"),
-                ),
-              ];
-            },
-          ),
+        actions: <Widget> [
           IconButton(
               icon: Icon(Icons.close),
               onPressed: () {
@@ -152,37 +49,111 @@ class _HomePageState extends State<HomePage> {
                 Navigator.pop(context);
               }),
         ],
+        automaticallyImplyLeading: false,
+        leading: null,
         backgroundColor: Colors.teal,
         title: Text('PASSDOWN'),
       ),
-      body: StreamBuilder<QuerySnapshot>(
-                    stream: query.snapshots(),
-                    builder: (context, stream) {
-                      if (stream.connectionState == ConnectionState.waiting) {
-                        return Center(child: CircularProgressIndicator());
-                      }
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.pushNamed(context, UploadProductPage.id);
+        },
+        child: Icon(Icons.add),
+      ),
+      bottomNavigationBar: BottomNavBarWidget(),
+    );
+  }
+}
 
-                      if (stream.hasError) {
-                        return Center(child: Text(stream.error.toString()));
-                      }
-                      //print(stream.error);
-                      QuerySnapshot querySnapshot = stream.data;
 
-                      //print(querySnapshot);
-                      return ListView.builder(
-                        itemCount: querySnapshot.size,
-                        itemBuilder: (context, index) => Product(querySnapshot.docs[index]),
-                      );
-                    },
-        ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            Navigator.pushNamed(context, UploadProductPage.id);
-          },
-          child: Icon(Icons.add),
-        ),
-    bottomNavigationBar: BottomNavBarWidget(),
-  );
+class ProductStream extends StatelessWidget {
+  Widget build(BuildContext context) {
+    return StreamBuilder<QuerySnapshot>(
+      stream: _firestore.collection('products').snapshots(),
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) {
+          return Center(
+            child: CircularProgressIndicator(
+              backgroundColor: Colors.tealAccent,
+            ),
+          );
+        }
+        final products = snapshot.data.docs.reversed;
+        List<Product> productItems = [];
+        for (var productdata in products) {
+          final passdownUser = productdata.data()['passdownUser'];
+          final productnameText = productdata.data()['productnameText'];
+          final descriptionText = productdata.data()['descriptionText'];
+          final categoryText = productdata.data()['categoryText'];
+
+          final currentUser = loggedInUser.email;
+
+          final productsToDisplay = Product(
+            passdownUser: passdownUser,
+            productnameText: productnameText,
+            descriptionText: descriptionText,
+            categoryText: categoryText,
+            isMe: currentUser == passdownUser,
+          );
+
+          productItems.add(productsToDisplay);
+        }
+        return Expanded(
+          child: ListView(
+            reverse: true,
+            padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 20.0),
+            children: productItems,
+          ),
+        );
+          }
+          );
+    }
+  }
+
+
+/// A single product row.
+class Product extends StatelessWidget {
+
+  Product({this.passdownUser, this.productnameText,
+    this.descriptionText, this.categoryText, this.isMe});
+
+  final String passdownUser;
+  final String productnameText;
+  final String categoryText;
+  final String descriptionText;
+  final bool isMe;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+        padding: EdgeInsets.only(bottom: 4, top: 4),
+        child: Container(
+          child: Row(
+            children: <Widget> [
+              Text(
+                productnameText,
+                style: TextStyle(
+                  fontSize: 12.0,
+                  color: Colors.black54,
+                ),
+              ),
+              Text(
+                descriptionText,
+                style: TextStyle(
+                  fontSize: 12.0,
+                  color: Colors.black54,
+                ),
+              ),
+              Text(
+                categoryText,
+                style: TextStyle(
+                  fontSize: 12.0,
+                  color: Colors.black54,
+                ),
+              ),
+            ],
+          ),
+        ));
   }
 }
 
